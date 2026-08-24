@@ -151,6 +151,13 @@ def save_cookie(var_name: str, cookie: str):
         print("未检测到支持的环境，跳过变量保存")
         return False
 
+
+def split_cookies(cookie_text: str):
+    """解析多个Cookie，兼容 &、LF 和 CRLF 分隔。"""
+    normalized = cookie_text.replace("\r\n", "\n").replace("\r", "\n")
+    normalized = normalized.replace("&", "\n")
+    return [cookie.strip() for cookie in normalized.split("\n") if cookie.strip()]
+
 # ---------------- 登录逻辑 ----------------
 def session_login(user, password, api_base_url, client_key):
     try:
@@ -379,8 +386,7 @@ if __name__ == "__main__":
     
     # 读取现有Cookie
     all_cookies = os.getenv("NS_COOKIE", "")
-    cookie_list = all_cookies.split("&")
-    cookie_list = [c.strip() for c in cookie_list if c.strip()]
+    cookie_list = split_cookies(all_cookies)
     
     print(f"共发现 {len(accounts)} 个账户配置，{len(cookie_list)} 个现有Cookie")
     
@@ -476,7 +482,7 @@ if __name__ == "__main__":
     
     if cookies_updated and cookie_list:
         print("\n==== 处理完毕，保存更新后的Cookie ====")
-        all_cookies_new = "&".join([c for c in cookie_list if c.strip()])
+        all_cookies_new = "\n".join([c for c in cookie_list if c.strip()])
         try:
             save_cookie("NS_COOKIE", all_cookies_new)
             print("所有Cookie已成功保存")
