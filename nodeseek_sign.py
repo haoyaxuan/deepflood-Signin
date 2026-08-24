@@ -198,8 +198,15 @@ def session_login(user, password, api_base_url, client_key):
         response = session.post("https://www.nodeseek.com/api/account/signIn", json=data, headers=headers)
         resp_json = response.json()
         if resp_json.get("success"):
+            if resp_json.get("need2FA"):
+                print("登录需要二次验证（2FA），请配置有效的 NS_COOKIE 后签到")
+                return None
+
             cookies = session.cookies.get_dict()
             cookie_string = '; '.join([f"{k}={v}" for k, v in cookies.items()])
+            if not cookie_string:
+                print("登录接口返回成功，但未下发Cookie，请配置有效的 NS_COOKIE 后重试")
+                return None
             return cookie_string
         else:
             print("登录失败:", resp_json.get("message"))

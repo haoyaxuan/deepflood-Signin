@@ -1,4 +1,4 @@
-name: Deepflood 签到
+name: NodeSeek 签到
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
   actions: write  # 添加写入Actions变量的权限
 
 jobs:
-  run-deepflood-sign:
+  run-nodeseek-sign:
     runs-on: ubuntu-latest
 
     steps:
@@ -48,7 +48,8 @@ jobs:
           PASS5: ${{ secrets.PASS5 }}
           
           # Cookie配置
-          DF_COOKIE: ${{ vars.DF_COOKIE || secrets.DF_COOKIE }}
+          NS_COOKIE: ${{ vars.NS_COOKIE || secrets.NS_COOKIE }}
+          NS_RANDOM: ${{ vars.NS_RANDOM || secrets.NS_RANDOM || 'true' }}
           
           # 验证码配置
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
