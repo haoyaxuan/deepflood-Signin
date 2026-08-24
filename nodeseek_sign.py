@@ -177,9 +177,7 @@ def session_login(user, password, api_base_url, client_key):
 
     data = {
         "username": user,
-        "password": password,
-        "token": token,
-        "source": "turnstile"
+        "password": password
     }
     headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
@@ -192,7 +190,9 @@ def session_login(user, password, api_base_url, client_key):
         'sec-fetch-dest': "empty",
         'referer': "https://www.nodeseek.com/signIn.html",
         'accept-language': "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        'Content-Type': "application/json"
+        'Content-Type': "application/json",
+        'x-captcha-token': token,
+        'x-captcha-source': "turnstile"
     }
     try:
         response = session.post("https://www.nodeseek.com/api/account/signIn", json=data, headers=headers)
@@ -475,4 +475,3 @@ if __name__ == "__main__":
             print("所有Cookie已成功保存")
         except Exception as e:
             print(f"保存Cookie变量异常: {e}")
-
